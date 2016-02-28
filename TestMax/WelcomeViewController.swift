@@ -1,0 +1,192 @@
+//
+//  ViewController.swift
+//  TestMax
+//
+//  Created by Huiyuan Ren on 16/2/26.
+//  Copyright © 2016年 Huiyuan Ren. All rights reserved.
+//
+
+import UIKit
+import CoreData
+import SwiftyJSON
+import Alamofire
+
+class WelcomeViewController: UIViewController {
+    var completeNumber = 0
+    
+    
+    @IBOutlet weak var LogoImage: UIImageView!
+    
+    @IBOutlet weak var TotalQuestionLabel: UILabel!
+
+    @IBOutlet weak var CompleteQuestionLabel: UILabel!
+    
+    @IBOutlet weak var ReviewButton: UIButton!
+    @IBOutlet weak var StartButton: UIButton!
+    @IBOutlet weak var ResetButton: UIButton!
+    
+    @IBOutlet weak var BackgroundImage: UIImageView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+//        let url = NSURL(string: "http://cs-server.usc.edu:32962/Questions.json")!
+//        DataStruct.json = JSON(data: NSData(contentsOfURL: url)! )
+      DataStruct.json = JSON(data: NSData(contentsOfFile: "/Users/huiyuanren/Code/TestMax/TestMax/Questions.json")! )
+        print(DataStruct.json.count)
+        self.setOriginState()
+//        self.cleanUpSavedData()
+        
+        //DataStruct.json = JSON(data: data!)
+
+        BackgroundImage.image = UIImage.gifWithName("Beans")
+        
+        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        launchAnimation()
+        checkSavedData()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent;
+    }
+
+    func cleanUpSavedData(){
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        let fetchRequest = NSFetchRequest(entityName: "QandA")
+        do{
+            let result = try managedContext.executeFetchRequest(fetchRequest)
+            for  item in result {
+                managedContext.deleteObject(item as! NSManagedObject)
+            }
+        }catch{
+            
+        }
+        startButtonPressed(StartButton)
+    }
+    
+    func checkSavedData(){
+        TotalQuestionLabel.text = "Total: \(DataStruct.json.count)"
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        let fetchRequest = NSFetchRequest(entityName: "QandA")
+        do{
+            let result = try managedContext.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+            CompleteQuestionLabel.text = "Completed: \(result.count)"
+            completeNumber = result.count
+            if(result.count == 0){
+                ReviewButton.enabled = false
+                ReviewButton.layer.backgroundColor = UIColor.lightGrayColor().CGColor
+                ResetButton.hidden = true
+                StartButton.setTitle("Start", forState: .Normal)
+            }else{
+                ReviewButton.enabled = true
+                ReviewButton.layer.backgroundColor = UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 0.8).CGColor
+                ResetButton.hidden = false
+                StartButton.setTitle("Resume", forState: .Normal)
+
+            }
+        }catch{
+            
+        }
+    }
+    
+    /**
+     The animation after launching
+     */
+    func launchAnimation() {
+        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+                self.LogoImage.transform = CGAffineTransformMakeTranslation(0, 0)
+                self.ReviewButton.transform = CGAffineTransformMakeTranslation(0, 0)
+                self.StartButton.transform = CGAffineTransformMakeTranslation(0, 0)
+                self.ResetButton.transform = CGAffineTransformMakeTranslation(0, 0)
+            
+                self.LogoImage.alpha = 1
+                self.TotalQuestionLabel.alpha = 1
+                self.CompleteQuestionLabel.alpha = 1
+                self.ReviewButton.alpha = 1
+                self.StartButton.alpha = 1
+                self.ResetButton.alpha = 1
+            }, completion:  nil)
+
+        
+     
+    }
+    
+    func quitAnimation(index : Int){
+        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+            self.LogoImage.transform = CGAffineTransformMakeTranslation(0, -50)
+            self.ReviewButton.transform = CGAffineTransformMakeTranslation(0, 50)
+            self.StartButton.transform = CGAffineTransformMakeTranslation(0, 50)
+            self.ResetButton.transform = CGAffineTransformMakeTranslation(0, 50)
+            
+            self.LogoImage.alpha = 0
+            self.TotalQuestionLabel.alpha = 0
+            self.CompleteQuestionLabel.alpha = 0
+            self.ReviewButton.alpha = 0
+            self.StartButton.alpha = 0
+            self.ResetButton.alpha = 0
+            }){ (Bool) -> Void in
+                
+                if(index == 1){self.performSegueWithIdentifier("startSegue", sender: self)
+                }else{
+                    self.performSegueWithIdentifier("reviewSegue", sender: self)
+                }
+            }
+    }
+    
+    /**
+     set the orgin outlook of all the label & buttons
+     */
+    func setOriginState(){
+        ReviewButton.layer.borderColor = UIColor.whiteColor().CGColor
+        StartButton.layer.borderColor = UIColor.whiteColor().CGColor
+        ResetButton.layer.borderColor = UIColor.whiteColor().CGColor
+        ReviewButton.layer.borderWidth = 0.5
+        StartButton.layer.borderWidth = 0.5
+        ReviewButton.layer.cornerRadius = 5
+        StartButton.layer.cornerRadius = 5
+        ResetButton.layer.borderWidth = 0.5
+        ResetButton.layer.cornerRadius = 5
+        
+        
+        LogoImage.transform = CGAffineTransformMakeTranslation(0, -50)
+        ReviewButton.transform = CGAffineTransformMakeTranslation(0, 50)
+        StartButton.transform = CGAffineTransformMakeTranslation(0, 50)
+        ResetButton.transform = CGAffineTransformMakeTranslation(0, 50)
+        
+        LogoImage.alpha = 0
+        TotalQuestionLabel.alpha = 0
+        CompleteQuestionLabel.alpha = 0
+        ReviewButton.alpha = 0
+        StartButton.alpha = 0
+        ResetButton.alpha = 0
+    }
+
+    @IBAction func resetButtonPressed(sender: UIButton) {
+        cleanUpSavedData()
+    }
+    @IBAction func startButtonPressed(sender: UIButton) {
+        quitAnimation(1)
+    }
+    @IBAction func reviewButtonPressed(sender: UIButton) {
+        quitAnimation(2)
+
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "reviewSegue"){
+            let des = segue.destinationViewController as! ReviewViewController
+            des.totalNumber = completeNumber
+        }
+    }
+}
+
