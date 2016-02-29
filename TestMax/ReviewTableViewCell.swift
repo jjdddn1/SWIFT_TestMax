@@ -16,6 +16,7 @@ class ReviewTableViewCell: UITableViewCell {
             QuestionLabel.text = DataStruct.json[cellIndex]["Question"].string!
         }
     }
+    
     var selectedAnswer = 0{
         didSet{
             CorrectLabel.text = (selectedAnswer + 1 == DataStruct.json[cellIndex]["CorrectAnswer"].int!) ? "Right" : "Wrong"

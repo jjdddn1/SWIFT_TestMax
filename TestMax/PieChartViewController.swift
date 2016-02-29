@@ -22,7 +22,7 @@ class PieChartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        springBackGroundView.layer.shadowColor = UIColor.blackColor().CGColor
+        pieChartView.layer.shadowColor = UIColor.blackColor().CGColor
         // Do any additional setup after loading the view.
     }
 
@@ -36,6 +36,7 @@ class PieChartViewController: UIViewController {
         setChart(correctness, values: numbers)
     }
     
+    /* Create a pie chart and start the animation */
     func setChart(dataPoints: [String], values: [Double]) {
         pieChartView.descriptionText = "Test Result"
         var dataEntries: [ChartDataEntry] = []
@@ -52,20 +53,21 @@ class PieChartViewController: UIViewController {
         let pieChartDataSet = PieChartDataSet(yVals: dataEntries, label: "Numbers")
         pieChartDataSet.colors = colors
         let pieChartData = PieChartData(xVals: dataPoints, dataSet: pieChartDataSet)
+        
+        // set number format
         let formatter = NSNumberFormatter()
         formatter.numberStyle = NSNumberFormatterStyle.NoStyle
         formatter.maximumFractionDigits = 0
         pieChartData.setValueFormatter(formatter)
+        
         pieChartView.data = pieChartData
         pieChartView.animate(xAxisDuration: 1, easingOption: ChartEasingOption.EaseOutBack)
-
-        
-        
-        
     }
 
+    /* Dismiss the chart */
     @IBAction func ButtonPressed(sender: UIButton) {
         springBackGroundView.animation = "zoomOut"
+        pieChartView.animate(yAxisDuration: 0.5, easingOption: .EaseOutBack)
         springBackGroundView.animate()
         self.dismissViewControllerAnimated(true, completion: nil)
     }

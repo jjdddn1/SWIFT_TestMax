@@ -12,40 +12,34 @@ import SwiftyJSON
 import Alamofire
 
 class WelcomeViewController: UIViewController {
-    var completeNumber = 0
-    
-    
-    @IBOutlet weak var LogoImage: UIImageView!
-    
-    @IBOutlet weak var TotalQuestionLabel: UILabel!
+    var completeNumber = 0 // number of completed questions
 
+    @IBOutlet weak var TotalQuestionLabel: UILabel!
     @IBOutlet weak var CompleteQuestionLabel: UILabel!
     
     @IBOutlet weak var ReviewButton: UIButton!
     @IBOutlet weak var StartButton: UIButton!
     @IBOutlet weak var ResetButton: UIButton!
     
+    @IBOutlet weak var LogoImage: UIImageView!
     @IBOutlet weak var loadingImage: UIImageView!
     @IBOutlet weak var BackgroundImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // set up the image
         loadingImage.image = UIImage.gifWithName("loading2")
         BackgroundImage.image = UIImage.gifWithName("Beans")
 
-
-//        DataStruct.json = JSON(data: NSData(contentsOfURL: url)! )
+// For local test purpose
+//      DataStruct.json = JSON(data: NSData(contentsOfURL: url)! )
 //      DataStruct.json = JSON(data: NSData(contentsOfFile: "/Users/huiyuanren/Code/TestMax/TestMax/Questions.json")! )
 //        print(DataStruct.json.count)
+//      DataStruct.json = JSON(data: data!)
 
         
         self.setOriginState()
-//        self.cleanUpSavedData()
-        
-        //DataStruct.json = JSON(data: data!)
-
-
-        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -55,6 +49,8 @@ class WelcomeViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
+        
+        // request for the questions' JSON file
         let url = NSURL(string: "http://cs-server.usc.edu:32962/Questions.json")!
         Alamofire.request(.GET, url).validate().responseJSON { response in
             switch response.result {
@@ -63,6 +59,7 @@ class WelcomeViewController: UIViewController {
                 self.loadingImage.hidden = true
                 self.checkSavedData()
 
+                // Handle the short cut item
                 switch DataStruct.shortcutDirection{
                     
                 case 1:
@@ -76,7 +73,6 @@ class WelcomeViewController: UIViewController {
                     
                 }
                 DataStruct.loaded = true
-
                 self.launchAnimation()
                 break
             case .Failure(_):
@@ -91,6 +87,7 @@ class WelcomeViewController: UIViewController {
         return UIStatusBarStyle.LightContent;
     }
 
+    // clean up the answered questions and start a new round
     func cleanUpSavedData(){
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -101,11 +98,12 @@ class WelcomeViewController: UIViewController {
                 managedContext.deleteObject(item as! NSManagedObject)
             }
         }catch{
-            
+            print("Clean Saved Data Error")
         }
         startButtonPressed(StartButton)
     }
     
+    // Check how many questions have been answered, set review button outlook
     func checkSavedData(){
         TotalQuestionLabel.text = "Total: \(DataStruct.json.count)"
 
@@ -129,7 +127,7 @@ class WelcomeViewController: UIViewController {
 
             }
         }catch{
-            
+            print("Check Saved Data Error")
         }
     }
     
@@ -150,13 +148,13 @@ class WelcomeViewController: UIViewController {
                 self.StartButton.alpha = 1
                 self.ResetButton.alpha = 1
             }, completion:  nil)
-
-        
-     
     }
     
+    /* Perform the animation when leaving the welcome page, then navigate to the specific page */
     func quitAnimation(index : Int){
         UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+            
+            // move button away
             self.LogoImage.transform = CGAffineTransformMakeTranslation(0, -50)
             self.ReviewButton.transform = CGAffineTransformMakeTranslation(0, 50)
             self.StartButton.transform = CGAffineTransformMakeTranslation(0, 50)
@@ -168,10 +166,15 @@ class WelcomeViewController: UIViewController {
             self.ReviewButton.alpha = 0
             self.StartButton.alpha = 0
             self.ResetButton.alpha = 0
+            
             }){ (Bool) -> Void in
                 
-                if(index == 1){self.performSegueWithIdentifier("startSegue", sender: self)
-                }else{
+                // navigate to the questions page
+                if(index == 1){
+                    self.performSegueWithIdentifier("startSegue", sender: self)
+                }
+                // navigate to the review page
+                else{
                     self.performSegueWithIdentifier("reviewSegue", sender: self)
                 }
             }
@@ -206,19 +209,21 @@ class WelcomeViewController: UIViewController {
     }
 
     @IBAction func resetButtonPressed(sender: UIButton) {
-        
         showAlert()
     }
+    
     @IBAction func startButtonPressed(sender: UIButton) {
         quitAnimation(1)
     }
+    
     @IBAction func reviewButtonPressed(sender: UIButton) {
         quitAnimation(2)
 
     }
     
+    /*Alert the user the consequence to start a new test and start it*/
     func showAlert(){
-        let alertController = UIAlertController(title: "Start a new round", message: "Start a new round will clean up every thing you've answered, continue?", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Start a new round", message: "Start a new test will clean up everything you've answered, continue?", preferredStyle: .Alert)
         let confirm = UIAlertAction(title: "Continue", style: .Default) { (_) -> Void in
             self.cleanUpSavedData()
 

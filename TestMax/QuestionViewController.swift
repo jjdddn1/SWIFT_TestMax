@@ -13,7 +13,9 @@ import SwiftyJSON
 class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
     
 
-    var totalNumber = 100
+    var totalNumber = 100 // the total numebr of questions, 100 is just temperary number
+    
+    // The index of the question that's displaying
     var currentQuestionNumber = 0{
         didSet{
             if(currentQuestionNumber < 0){
@@ -24,7 +26,6 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
             print("CurrentNumber Set : \(currentQuestionNumber)")
         }
     }
-    var pageViewController : UIPageViewController?
     
     enum ViewControllerType {
         case Welcome
@@ -32,19 +33,22 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
     }
     
     var BeforeViewControllerType : ViewControllerType = .Welcome
+    
     var BeforeViewController: ReviewViewController!
+    
+    var pageViewController : UIPageViewController?
     
     @IBOutlet weak var NavigationItem: UINavigationItem!
     
     @IBOutlet weak var GoLeftButton: UIButton!
-    
     @IBOutlet weak var GoRightButton: UIButton!
-    
     @IBOutlet weak var SubmitButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Check if current page came from reivew page or welcome page
+        // If it came from the review page, hide the submit so that the user won't submit again
         switch BeforeViewControllerType {
             case .Welcome:
             break
@@ -52,16 +56,12 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
                 SubmitButton.hidden = true
             break
         }
+        
         totalNumber = DataStruct.json.count
         
         DataStruct.questionViewController = self
-        
-        GoLeftButton.layer.borderColor = UIColor(red: 128/255, green: 0, blue: 255/255, alpha: 1).CGColor
-        GoLeftButton.layer.borderWidth = 1
-        GoRightButton .layer.borderColor = UIColor(red: 128/255, green: 0, blue: 255/255, alpha: 1).CGColor
-
-        GoRightButton.layer.borderWidth = 1
-        setNav()
+    
+        setUpUI()
         createPageViewController()
         // Do any additional setup after loading the view.
     }
@@ -71,8 +71,15 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
         // Dispose of any resources that can be recreated.
     }
 
-    
-    func setNav(){
+    /* Set up the button apperance & navigation bar */
+    func setUpUI(){
+        
+        GoLeftButton.layer.borderColor = UIColor(red: 128/255, green: 0, blue: 255/255, alpha: 1).CGColor
+        GoLeftButton.layer.borderWidth = 1
+        GoRightButton .layer.borderColor = UIColor(red: 128/255, green: 0, blue: 255/255, alpha: 1).CGColor
+        GoRightButton.layer.borderWidth = 1
+        
+        // Set up the navigation bar
         let item = UIBarButtonItem(image: UIImage(named: "CircledLeft"), style: UIBarButtonItemStyle.Plain , target: self, action: "backToPrevious")
         
         NavigationItem.leftBarButtonItem = item;
@@ -80,6 +87,7 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
         NavigationItem.rightBarButtonItem?.enabled = false
     }
     
+    /* Return to previous page */
     func backToPrevious(){
         switch (BeforeViewControllerType){
         case .Review:
@@ -91,45 +99,46 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
     }
     
     @IBAction func GoLeftButtonPressed(sender: UIButton) {
-        --currentQuestionNumber
-        let initialContenViewController = viewControllerAtIndex(currentQuestionNumber) as QuestionContentViewController
+        --currentQuestionNumber // Decrease the current displaying question index
         
+        // Set the pageview controller's current page
+        let initialContenViewController = viewControllerAtIndex(currentQuestionNumber) as QuestionContentViewController
         let viewControllers = NSArray(object: initialContenViewController)
         self.pageViewController!.setViewControllers((viewControllers as! [QuestionContentViewController]), direction: UIPageViewControllerNavigationDirection.Reverse, animated: true, completion: nil)
     }
 
     @IBAction func GoRightButtonPressed(sender: UIButton) {
-        ++currentQuestionNumber
-        let initialContenViewController = viewControllerAtIndex(currentQuestionNumber) as QuestionContentViewController
+        ++currentQuestionNumber// Increase the current displaying question index
         
+        // Set the pageview controller's current page
+        let initialContenViewController = viewControllerAtIndex(currentQuestionNumber) as QuestionContentViewController
         let viewControllers = NSArray(object: initialContenViewController)
         self.pageViewController!.setViewControllers((viewControllers as! [QuestionContentViewController]), direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
     }
     
+    /* Pop up an alert to indicate the user that the test has been submited. */
     @IBAction func submitButtonPressed(sender: UIButton) {
-        let alertController = UIAlertController(title: "Submit", message: "Submit successfully! Please check the result in \"Review\" section", preferredStyle: .Alert)
         
+        let alertController = UIAlertController(title: "Submit", message: "Submit successfully! Please check the result in \"Review\" section", preferredStyle: .Alert)
         let cancel = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.Cancel, handler: {
             (_) in
             self.dismissViewControllerAnimated(true, completion:  nil)
 
             }
         )
-        
         alertController.addAction(cancel)
-        
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 
-    
+    /* Create a page view controller */
     func createPageViewController(){
+        
         self.pageViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PageViewController") as? UIPageViewController
         
         self.pageViewController!.dataSource = self
+        
         let initialContenViewController = viewControllerAtIndex(currentQuestionNumber) as QuestionContentViewController
-        
         let viewControllers = NSArray(object: initialContenViewController)
-        
         
         self.pageViewController!.setViewControllers((viewControllers as! [QuestionContentViewController]), direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
 
@@ -139,11 +148,13 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
         self.pageViewController!.view.frame = CGRectMake(0, 80, self.view.frame.maxX, self.view.frame.maxY - 120)
     }
     
+    /* Update the navigation title */
     func updateNavTitle(index: Int){
         NavigationItem.title = "\(index + 1) / \(totalNumber)"
         currentQuestionNumber = index
     }
     
+    /* Return the page for a specific question */
     func viewControllerAtIndex(index : Int ) -> QuestionContentViewController {
         if(totalNumber == 0 || index >= totalNumber){
             return QuestionContentViewController()
@@ -171,7 +182,6 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
     
     func presentationCountForPageViewController(pageViewController: UIPageViewController) -> Int
     {
-//        return self.pageImages.count
         return totalNumber
     }
     

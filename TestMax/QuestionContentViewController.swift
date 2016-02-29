@@ -12,9 +12,10 @@ import CoreData
 
 class QuestionContentViewController: UIViewController,UIPageViewControllerDataSource {
     var pageIndex = 0
-    var answerIndex = 0
+    var answerIndex = 0 // current viewing answer's index
     {
         didSet{
+            // If the user's viewing the answer he selected, then highlight the answer
             if(answerIndex == selectedAnswer){
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
                     self.answerBackground.alpha = 0.5
@@ -27,9 +28,11 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         }
     }
     var totalNumber = 4
-    var selectedAnswer = -1
+    var selectedAnswer = -1 // the answer that the user selected
         {
         didSet{
+            
+            // If the user's viewing the answer he selected, then highlight the answer
             if(answerIndex == selectedAnswer){
                 UIView.animateWithDuration(0.4, animations: { () -> Void in
                     self.answerBackground.alpha = 0.5
@@ -41,28 +44,42 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
             }
         }
     }
+    
     var pageViewController : UIPageViewController?
     
-    
     @IBOutlet weak var QuestionScrollView: UIScrollView!
-    @IBOutlet weak var SelectButton: UIButton!
-    @IBOutlet weak var AnswerBackgroundView: UIView!
     @IBOutlet weak var QuestionLabel: UILabel!
+    
+    @IBOutlet weak var SelectButton: UIButton!
     @IBOutlet weak var A1Button: UIButton!
     @IBOutlet weak var A2Button: UIButton!
     @IBOutlet weak var A3Button: UIButton!
     @IBOutlet weak var A4Button: UIButton!
     
-    @IBOutlet weak var answerBackground: UIView!
+    @IBOutlet weak var AnswerBackgroundView: UIView! // The general background
+    @IBOutlet weak var answerBackground: UIView! // The highlight part
     @IBOutlet weak var IndicatorBar: UIView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        print("\(pageIndex) did load")
         setUpUI()
+        setSelectedAnswer()
+                // Do any additional setup after loading the view.
+    }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        DataStruct.questionViewController.updateNavTitle(pageIndex)
+    }
+    
+    /* Get the selected answer of specific question from the Database and set the UI */
+    func setSelectedAnswer(){
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest(entityName: "QandA")
@@ -71,8 +88,11 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
             
             for item in result {
                 if item.valueForKey("questionID") as! Int == pageIndex{
-//                    print("Start setting answer")
+                    
+                    // Read the selected answer from the database
                     selectedAnswer = item.valueForKey("selectedAnswer") as! Int
+                    
+                    // Automatically switch to the selected answer
                     switch selectedAnswer{
                     case 0:
                         AnswerButtonPressed(A1Button)
@@ -101,24 +121,11 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         }catch{
             
         }
-
-                // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
-        DataStruct.questionViewController.updateNavTitle(pageIndex)
-//        print("\(pageIndex) did appear")
-        
-
-    }
-    
-    
+    /* Set up the UI, including the content size of the scroll view, the border, etc */
     func setUpUI(){
+        
         QuestionLabel.text = DataStruct.json[pageIndex]["Question"].string!
         
         var contentHeight : CGFloat = 0;
@@ -138,13 +145,13 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         
     }
     
-    
+    /* Create a page view controller for displaying all the answer */
     func createPageViewController(){
         self.pageViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PageViewController") as? UIPageViewController
         
         self.pageViewController!.dataSource = self
-
         self.pageViewController!.view.frame = CGRectMake(0, self.view.bounds.size.height / 2 - 15, self.view.bounds.size.width, self.view.bounds.size.height / 2 - 45)
+        
         let initialContenViewController = viewControllerAtIndex(0) as AnswerContentViewController
         
         let viewControllers = NSArray(object: initialContenViewController)
@@ -156,43 +163,44 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         self.pageViewController!.didMoveToParentViewController(self)
     }
     
+    /* Highlight the selected answer */
     @IBAction func AnswerButtonPressed(sender: UIButton) {
-        cleanUpFont()
-        sender.titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 15)
-        sender.setTitleColor(UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1) , forState: UIControlState.Normal)
         
-        setSelectedAnswerColor()
+        changeToSpecificAnswer(sender)
+        
         let i = Int(sender.restorationIdentifier!)
-        indicatorBarGoToPosition(i!)
         
-        
+        // set the correct page for the page view controller
         if(answerIndex < i! - 1 ){
-            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             
+            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             self.pageViewController!.setViewControllers((viewControllers as! [AnswerContentViewController]), direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+            
         }else if (answerIndex > i! - 1){
-            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             
+            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             self.pageViewController!.setViewControllers((viewControllers as! [AnswerContentViewController]), direction: UIPageViewControllerNavigationDirection.Reverse, animated: true, completion: nil)
-        }else{
-            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             
+        }else{
+            
+            let viewControllers = NSArray(object: viewControllerAtIndex(i! - 1))
             self.pageViewController!.setViewControllers((viewControllers as! [AnswerContentViewController]), direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
         }
     
     }
     
+    /* Displaying the specific answer */
     func changeToSpecificAnswer(sender: UIButton) {
         cleanUpFont()
         sender.titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 15)
         sender.setTitleColor(UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1) , forState: UIControlState.Normal)
         let i = Int(sender.restorationIdentifier!)
-        indicatorBarGoToPosition(i!)
+        indicatorBarGoToPosition(i!) // move the indicate bar under the answer
         setSelectedAnswerColor()
 
     }
     
-
+    /* Move the indicator bar to specific location */
     func indicatorBarGoToPosition(index : Int){
         let width = self.IndicatorBar.frame.width
         UIView.animateWithDuration(0.4, animations:{ () -> Void in
@@ -209,9 +217,9 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         A3Button.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
         A4Button.titleLabel?.font = UIFont(name:"HelveticaNeue", size: 15)
         A4Button.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
-
     }
     
+    /* Set the color of the selected question */
     func setSelectedAnswerColor(){
         A1Button.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
         A2Button.setTitleColor(UIColor.lightGrayColor(), forState: UIControlState.Normal)
@@ -236,6 +244,7 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         }
     }
     
+    /* Store the answer in the database and modify the UI */
     @IBAction func selectButtonPressed(sender: UIButton) {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -261,7 +270,7 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
     }
     
     /**
-     check if the current question is answered from the database
+     Check if the current question is answered from the database
      */
     func checkQuestionExist() -> NSManagedObject? {
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -283,7 +292,7 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
     
     
     /**
-     check if the current question is answered from the database
+     Count the answerd questions
      */
     func countAnswerdQuestions() -> Int {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

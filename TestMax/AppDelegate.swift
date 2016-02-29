@@ -134,6 +134,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    /*
+    To handle the shortcut item
+    */
     @available(iOS 9.0, *)
     func handleShortcutItem(shortcutItem: UIApplicationShortcutItem) -> Bool{
         var handled = false
@@ -141,6 +144,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let shortcutType = shortcutItem.type as String? else {return false}
         
         switch (shortcutType){
+            
+            /*ShortCut: start*/
             case ShortcutIdentifier.First.type:
                 handled = true
                 DataStruct.shortcutDirection = 1
@@ -153,6 +158,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
 
                 break
+            
+            /*ShortCut: review*/
             case ShortcutIdentifier.Second.type:
                 DataStruct.shortcutDirection = 2
                 handled = true

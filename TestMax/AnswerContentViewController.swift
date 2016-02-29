@@ -10,8 +10,9 @@ import UIKit
 import SwiftyJSON
 
 class AnswerContentViewController: UIViewController {
-    var questionIndex = 0
-    var pageIndex = 0
+    
+    var questionIndex = 0 // current displaying questions's index
+    var pageIndex = 0 // current displaying answer's index
     
     var beforeViewController : QuestionContentViewController!
     
@@ -22,20 +23,17 @@ class AnswerContentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        AnswerLabel.text = DataStruct.json[questionIndex]["Answer\(pageIndex + 1)"].string!
-        // Do any additional setup after loading the view.
+        AnswerLabel.text = DataStruct.json[questionIndex]["Answer\(pageIndex + 1)"].string! // get the context of the answer
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewDidAppear(animated: Bool) {
         
         beforeViewController.answerIndex = pageIndex
-//        print(pageIndex)
+        
         switch pageIndex{
             case 0:
                 beforeViewController.changeToSpecificAnswer(beforeViewController.A1Button)

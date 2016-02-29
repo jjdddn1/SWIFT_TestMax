@@ -10,10 +10,11 @@ import UIKit
 import CoreData
 
 class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var totalNumber = 0
-    var correctNumber = 0
-    var Dictionary : [(Int, Int)] = []
-    var currentSelectedCell = 0
+    
+    var totalNumber = 0 // Total number of answered questions
+    var correctNumber = 0 // Number of answers that are correct
+    var Dictionary : [(Int, Int)] = [] // a dictionary to store the user's answer
+    var currentSelectedCell = 0 // The index of the cell that user clicked
     var cells : [UITableViewCell]!
     
     @IBOutlet weak var NavigationItem: UINavigationItem!
@@ -21,7 +22,6 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
-        //tableView.dataSource = self
 
         super.viewDidLoad()
 
@@ -48,6 +48,7 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    /* Perfrom the animation loading the table */
     func tableViewAnimationStart(){
         let diff = 0.05
         cells = tableView.visibleCells as [UITableViewCell]
@@ -70,6 +71,7 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    /* zoom out the cell */
     func cellAnimationBegin(indexPath: NSIndexPath){
         let cell  = tableView.cellForRowAtIndexPath(indexPath)
         let originState = cell!.transform
@@ -80,18 +82,18 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }) { (Bool) -> Void in
                 cell!.transform = CGAffineTransformScale(originState, 1, 1)
                 cell!.alpha = 1
-
         }
-        
     }
     
 
-    
+    /* Check the database for the user's answer and count the correct ones */
     func abstractData(){
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let fetchRequest = NSFetchRequest(entityName: "QandA")
+        
+        // sort the database first
         let sortDescrpitor = NSSortDescriptor(key: "questionID", ascending: true,selector: Selector("localizedStandardCompare:"))
         fetchRequest.sortDescriptors = [sortDescrpitor]
         do{
@@ -100,7 +102,7 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
             correctNumber = 0
             for item in result{
                 let tmp :(Int, Int) = (item.valueForKey("questionID") as! Int, item.valueForKey("selectedAnswer") as! Int)
-                Dictionary.append(tmp)
+                Dictionary.append(tmp) // store the answer's information in the dictionary
                 
                 if(tmp.1 + 1 == DataStruct.json[tmp.0]["CorrectAnswer"].int!){
                     correctNumber++
@@ -112,20 +114,22 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         totalNumber = Dictionary.count
         tableView.reloadData()
-        print(Dictionary)
+//        print(Dictionary)
         
     }
     
+    /* Set up the navigation bar */
     func setNav(){
         let item = UIBarButtonItem(image: UIImage(named: "CircledLeft"), style: UIBarButtonItemStyle.Plain , target: self, action: "backToPrevious")
         
         NavigationItem.leftBarButtonItem = item;
         NavigationItem.title = "Review"
     }
+    
+    /* go back to previous page */
     func backToPrevious(){
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -175,6 +179,7 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
     */
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
         if(segue.identifier == "showQuestionSegue"){
             let des = segue.destinationViewController as! QuestionViewController
             des.currentQuestionNumber = currentSelectedCell
