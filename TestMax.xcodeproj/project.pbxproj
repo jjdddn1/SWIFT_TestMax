@@ -202,6 +202,31 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		860FDCC51C850E7000705B21 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				868FBCFC1C812AA100F8F412 /* AppDelegate.swift */,
+				868FBD081C812AA100F8F412 /* LaunchScreen.storyboard */,
+				868FBD0B1C812AA100F8F412 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		860FDCC91C850E8600705B21 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				868FBCFE1C812AA100F8F412 /* WelcomeViewController.swift */,
+				868FBD361C813BC200F8F412 /* QuestionViewController.swift */,
+				868FBD3A1C81492200F8F412 /* QuestionContentViewController.swift */,
+				868FBD3E1C81805F00F8F412 /* AnswerContentViewController.swift */,
+				864B21A31C82A1A3000BE907 /* ReviewViewController.swift */,
+				864B21A71C82AA8A000BE907 /* ReviewTableViewCell.swift */,
+				860FDCAD1C84C10E00705B21 /* PieChartViewController.swift */,
+				868FBD001C812AA100F8F412 /* Main.storyboard */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		868FBCF01C812AA000F8F412 = {
 			isa = PBXGroup;
 			children = (
@@ -227,18 +252,8 @@
 		868FBCFB1C812AA100F8F412 /* TestMax */ = {
 			isa = PBXGroup;
 			children = (
-				868FBCFC1C812AA100F8F412 /* AppDelegate.swift */,
-				868FBCFE1C812AA100F8F412 /* WelcomeViewController.swift */,
-				868FBD361C813BC200F8F412 /* QuestionViewController.swift */,
-				868FBD3A1C81492200F8F412 /* QuestionContentViewController.swift */,
-				868FBD3E1C81805F00F8F412 /* AnswerContentViewController.swift */,
-				864B21A31C82A1A3000BE907 /* ReviewViewController.swift */,
-				864B21A71C82AA8A000BE907 /* ReviewTableViewCell.swift */,
-				860FDCAD1C84C10E00705B21 /* PieChartViewController.swift */,
-				868FBD001C812AA100F8F412 /* Main.storyboard */,
-				868FBD061C812AA100F8F412 /* Assets.xcassets */,
-				868FBD081C812AA100F8F412 /* LaunchScreen.storyboard */,
-				868FBD0B1C812AA100F8F412 /* Info.plist */,
+				860FDCC91C850E8600705B21 /* UI */,
+				860FDCC51C850E7000705B21 /* Supporting Files */,
 				868FBD311C81340700F8F412 /* Library */,
 				868FBD2E1C812C4700F8F412 /* img */,
 				868FBD2D1C812C3900F8F412 /* Data */,
@@ -277,6 +292,7 @@
 		868FBD2E1C812C4700F8F412 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				868FBD061C812AA100F8F412 /* Assets.xcassets */,
 				860FDCBE1C84E16500705B21 /* TestMax.png */,
 				860FDC751C8417D800705B21 /* loading3.gif */,
 				860FDC771C84189000705B21 /* loading2.gif */,
