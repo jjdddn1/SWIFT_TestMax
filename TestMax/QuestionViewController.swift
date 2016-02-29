@@ -25,17 +25,33 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
         }
     }
     var pageViewController : UIPageViewController?
+    
+    enum ViewControllerType {
+        case Welcome
+        case Review
+    }
+    
+    var BeforeViewControllerType : ViewControllerType = .Welcome
+    var BeforeViewController: ReviewViewController!
+    
     @IBOutlet weak var NavigationItem: UINavigationItem!
     
     @IBOutlet weak var GoLeftButton: UIButton!
     
     @IBOutlet weak var GoRightButton: UIButton!
     
+    @IBOutlet weak var SubmitButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        switch BeforeViewControllerType {
+            case .Welcome:
+            break
+            case .Review:
+                SubmitButton.hidden = true
+            break
+        }
         totalNumber = DataStruct.json.count
         
         DataStruct.questionViewController = self
@@ -65,6 +81,12 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
     }
     
     func backToPrevious(){
+        switch (BeforeViewControllerType){
+        case .Review:
+            BeforeViewController.abstractData()
+        case .Welcome:
+            break
+        }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -84,7 +106,21 @@ class QuestionViewController: UIViewController, UIPageViewControllerDataSource {
         self.pageViewController!.setViewControllers((viewControllers as! [QuestionContentViewController]), direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
     }
     
-    
+    @IBAction func submitButtonPressed(sender: UIButton) {
+        let alertController = UIAlertController(title: "Submit", message: "Submit successfully! Please check the result in \"Review\" section", preferredStyle: .Alert)
+        
+        let cancel = UIAlertAction(title: "Confirm", style: UIAlertActionStyle.Cancel, handler: {
+            (_) in
+            self.dismissViewControllerAnimated(true, completion:  nil)
+
+            }
+        )
+        
+        alertController.addAction(cancel)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+
     
     func createPageViewController(){
         self.pageViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PageViewController") as? UIPageViewController

@@ -24,6 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    @available(iOS 9.0, *)
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        let handledShortcutItem = self.handleShortcutItem(shortcutItem)
+        completionHandler(handledShortcutItem)
+    }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -33,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        self.window?.rootViewController?.dismissViewControllerAnimated(false, completion: nil)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -112,6 +119,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    
+    enum ShortcutIdentifier: String{
+        case First
+        case Second
+        init?(fullType: String){
+            guard let last = fullType.componentsSeparatedByString(".").last
+                else{ return nil }
+            self.init(rawValue: last)
+        }
+        
+        var type : String{
+            return NSBundle.mainBundle().bundleIdentifier! + ".\(self.rawValue)"
+        }
+    }
+    
+    @available(iOS 9.0, *)
+    func handleShortcutItem(shortcutItem: UIApplicationShortcutItem) -> Bool{
+        var handled = false
+        guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else {return false}
+        guard let shortcutType = shortcutItem.type as String? else {return false}
+        
+        switch (shortcutType){
+            case ShortcutIdentifier.First.type:
+                handled = true
+                DataStruct.shortcutDirection = 1
+                
+                if DataStruct.loaded {
+                    print(DataStruct.loaded)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let welcomePage = storyboard.instantiateViewControllerWithIdentifier("welcomeViewController") as! WelcomeViewController
+                self.window?.rootViewController?.presentViewController(welcomePage, animated: false, completion: nil)
+                }
+
+                break
+            case ShortcutIdentifier.Second.type:
+                DataStruct.shortcutDirection = 2
+                handled = true
+                
+                if DataStruct.loaded {
+                    print(DataStruct.loaded)
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let welcomePage = storyboard.instantiateViewControllerWithIdentifier("welcomeViewController") as! WelcomeViewController
+                    self.window?.rootViewController?.presentViewController(welcomePage, animated: false, completion: nil)
+                }
+                break
+            default: break
+        }
+        return handled
+    }
 
       // MARK: - Core Data Saving support
 

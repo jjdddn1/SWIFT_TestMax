@@ -25,20 +25,26 @@ class WelcomeViewController: UIViewController {
     @IBOutlet weak var StartButton: UIButton!
     @IBOutlet weak var ResetButton: UIButton!
     
+    @IBOutlet weak var loadingImage: UIImageView!
     @IBOutlet weak var BackgroundImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let url = NSURL(string: "http://cs-server.usc.edu:32962/Questions.json")!
+        loadingImage.image = UIImage.gifWithName("loading2")
+        BackgroundImage.image = UIImage.gifWithName("Beans")
+
+
 //        DataStruct.json = JSON(data: NSData(contentsOfURL: url)! )
-      DataStruct.json = JSON(data: NSData(contentsOfFile: "/Users/huiyuanren/Code/TestMax/TestMax/Questions.json")! )
-        print(DataStruct.json.count)
+//      DataStruct.json = JSON(data: NSData(contentsOfFile: "/Users/huiyuanren/Code/TestMax/TestMax/Questions.json")! )
+//        print(DataStruct.json.count)
+
+        
         self.setOriginState()
 //        self.cleanUpSavedData()
         
         //DataStruct.json = JSON(data: data!)
 
-        BackgroundImage.image = UIImage.gifWithName("Beans")
+
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -49,8 +55,36 @@ class WelcomeViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        launchAnimation()
-        checkSavedData()
+        let url = NSURL(string: "http://cs-server.usc.edu:32962/Questions.json")!
+        Alamofire.request(.GET, url).validate().responseJSON { response in
+            switch response.result {
+            case .Success:
+                DataStruct.json = JSON(response.result.value!)
+                self.loadingImage.hidden = true
+                self.checkSavedData()
+
+                switch DataStruct.shortcutDirection{
+                    
+                case 1:
+                    DataStruct.shortcutDirection = 0
+                    self.startButtonPressed(self.StartButton)
+                case 2:
+                    DataStruct.shortcutDirection = 0
+                    self.reviewButtonPressed(self.ReviewButton)
+                default:
+                    break
+                    
+                }
+                DataStruct.loaded = true
+
+                self.launchAnimation()
+                break
+            case .Failure(_):
+                NSLog("Failure")
+                break
+            }
+        }
+
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -172,7 +206,8 @@ class WelcomeViewController: UIViewController {
     }
 
     @IBAction func resetButtonPressed(sender: UIButton) {
-        cleanUpSavedData()
+        
+        showAlert()
     }
     @IBAction func startButtonPressed(sender: UIButton) {
         quitAnimation(1)
@@ -181,11 +216,29 @@ class WelcomeViewController: UIViewController {
         quitAnimation(2)
 
     }
+    
+    func showAlert(){
+        let alertController = UIAlertController(title: "Start a new round", message: "Start a new round will clean up every thing you've answered, continue?", preferredStyle: .Alert)
+        let confirm = UIAlertAction(title: "Continue", style: .Default) { (_) -> Void in
+            self.cleanUpSavedData()
+
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+        
+        alertController.addAction(cancel)
+        alertController.addAction(confirm)
+
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "reviewSegue"){
             let des = segue.destinationViewController as! ReviewViewController
             des.totalNumber = completeNumber
+        }else if segue.identifier == "startSegue"{
+            let des = segue.destinationViewController as! QuestionViewController
+            des.BeforeViewControllerType = .Welcome
         }
     }
 }

@@ -27,15 +27,26 @@
                                 <items>
                                     <navigationItem title="Title" id="0Rz-FT-w0e">
                                         <barButtonItem key="leftBarButtonItem" id="4h2-EL-edJ"/>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="dWv-wt-RJ6">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" id="O8H-A0-FpK">
+                                                <rect key="frame" x="341" y="11" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <connections>
+                                                    <segue destination="eME-qG-VT3" kind="presentation" identifier="chartSegue" animates="NO" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="ySV-YA-k7z"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                                 <connections>
                                     <outlet property="delegate" destination="0Rz-FT-w0e" id="8vW-se-8fk"/>
                                 </connections>
                             </navigationBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="83" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="321-lo-vNK">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" rowHeight="83" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="321-lo-vNK">
                                 <rect key="frame" x="-4" y="65" width="383" height="602"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="83" id="rBY-1u-c7d" customClass="ReviewTableViewCell" customModule="TestMax" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="383" height="83"/>
@@ -82,6 +93,8 @@
                                                 <constraint firstItem="LKZ-G3-H27" firstAttribute="bottom" secondItem="S8A-5y-3Ju" secondAttribute="bottom" id="mA6-c8-QwV"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="CorrectLabel" destination="LKZ-G3-H27" id="jRs-TN-GlD"/>
                                             <outlet property="QuestionIndex" destination="S8A-5y-3Ju" id="9KR-hB-cN3"/>
@@ -110,7 +123,7 @@
                     <connections>
                         <outlet property="NavigationItem" destination="0Rz-FT-w0e" id="b8p-a6-DBo"/>
                         <outlet property="tableView" destination="321-lo-vNK" id="v4Z-kN-K2E"/>
-                        <segue destination="913-qi-YNZ" kind="show" identifier="showQuestionSegue" id="Bjh-CU-8X9"/>
+                        <segue destination="913-qi-YNZ" kind="presentation" identifier="showQuestionSegue" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="Bjh-CU-8X9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UcI-Gy-esT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -120,7 +133,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="WelcomeViewController" customModule="TestMax" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="welcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="WelcomeViewController" customModule="TestMax" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -184,11 +197,19 @@
                                     <action selector="reviewButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jJe-Ys-SHG"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C2o-ls-hi2">
+                                <rect key="frame" x="163" y="278" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="JNm-rZ-TSH"/>
+                                    <constraint firstAttribute="width" secondItem="C2o-ls-hi2" secondAttribute="height" multiplier="1:1" id="q1d-Wk-zP8"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="gmn-5m-dOO" secondAttribute="bottom" constant="80" id="3tY-fj-Xw7"/>
                             <constraint firstItem="Y73-8o-a2q" firstAttribute="top" secondItem="g6y-2K-7fr" secondAttribute="top" id="5Ow-XG-c6b"/>
+                            <constraint firstItem="C2o-ls-hi2" firstAttribute="centerX" secondItem="g6y-2K-7fr" secondAttribute="centerX" id="8Q3-Oh-qed"/>
                             <constraint firstItem="sM9-mr-GQb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="35" id="Fka-Xo-iNr"/>
                             <constraint firstItem="g6y-2K-7fr" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="Fyg-nz-xM4"/>
                             <constraint firstItem="g6y-2K-7fr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="IcV-Pa-ent"/>
@@ -207,6 +228,7 @@
                             <constraint firstAttribute="leadingMargin" secondItem="4XX-BS-XGn" secondAttribute="leading" id="cis-t8-MCQ"/>
                             <constraint firstAttribute="leadingMargin" secondItem="MVw-fz-ttx" secondAttribute="leading" id="cma-hy-eHW"/>
                             <constraint firstItem="sM9-mr-GQb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="e6q-D9-SLg"/>
+                            <constraint firstItem="C2o-ls-hi2" firstAttribute="top" secondItem="MVw-fz-ttx" secondAttribute="top" id="heM-XF-1oh"/>
                             <constraint firstItem="4XX-BS-XGn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="idq-5I-vgW"/>
                             <constraint firstItem="Y73-8o-a2q" firstAttribute="leading" secondItem="g6y-2K-7fr" secondAttribute="leading" id="kuW-9R-ktg"/>
                             <constraint firstItem="gmn-5m-dOO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="l8g-qH-sh5"/>
@@ -230,6 +252,7 @@
                         <outlet property="ReviewButton" destination="gmn-5m-dOO" id="iOn-fD-VRU"/>
                         <outlet property="StartButton" destination="c1c-I6-kkc" id="zYA-Re-Vgb"/>
                         <outlet property="TotalQuestionLabel" destination="MVw-fz-ttx" id="AX3-HM-igS"/>
+                        <outlet property="loadingImage" destination="C2o-ls-hi2" id="kbx-A4-vcH"/>
                         <segue destination="913-qi-YNZ" kind="show" identifier="startSegue" id="hWW-jN-PCA"/>
                         <segue destination="4qh-DD-qF7" kind="show" identifier="reviewSegue" id="wcQ-pj-ZT4"/>
                     </connections>
@@ -273,6 +296,9 @@
                                                 <rect key="frame" x="276" y="27" width="83" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Submit"/>
+                                                <connections>
+                                                    <action selector="submitButtonPressed:" destination="913-qi-YNZ" eventType="touchUpInside" id="9Mj-oy-fTo"/>
+                                                </connections>
                                             </button>
                                         </barButtonItem>
                                     </navigationItem>
@@ -313,6 +339,7 @@
                         <outlet property="GoLeftButton" destination="VbL-qj-wXN" id="m8d-6r-K4U"/>
                         <outlet property="GoRightButton" destination="WsP-yg-m3v" id="rTe-7d-rVu"/>
                         <outlet property="NavigationItem" destination="hgP-XO-k56" id="4Bm-Dj-TmI"/>
+                        <outlet property="SubmitButton" destination="b1L-Oe-FTK" id="OSV-xI-hk6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCh-I7-OUg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -542,6 +569,80 @@ Should the appellate court uphold the convictions?</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyz-BO-S3j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="903.5" y="931.5"/>
+        </scene>
+        <!--Pie Chart View Controller-->
+        <scene sceneID="d9g-VD-dDc">
+            <objects>
+                <viewController id="eME-qG-VT3" customClass="PieChartViewController" customModule="TestMax" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aWE-9O-WNh"/>
+                        <viewControllerLayoutGuide type="bottom" id="Dfm-90-DaS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TT8-Hc-Fc2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LIN-L3-qIp" customClass="SpringView" customModule="Spring">
+                                <rect key="frame" x="38" y="184" width="300" height="300"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ABi-KP-cs1" customClass="PieChartView" customModule="Charts">
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="300" id="G2P-VK-1ay"/>
+                                            <constraint firstAttribute="width" constant="300" id="zj4-IQ-a6J"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="0Ci-Mn-8zQ"/>
+                                    <constraint firstItem="ABi-KP-cs1" firstAttribute="leading" secondItem="LIN-L3-qIp" secondAttribute="leading" id="Fxl-mY-hnc"/>
+                                    <constraint firstItem="ABi-KP-cs1" firstAttribute="top" secondItem="LIN-L3-qIp" secondAttribute="top" id="OeK-zw-jA0"/>
+                                    <constraint firstAttribute="trailing" secondItem="ABi-KP-cs1" secondAttribute="trailing" id="XMS-K0-Q7z"/>
+                                    <constraint firstAttribute="width" constant="300" id="oaE-2c-LQ9"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="autostart" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="animation" value="zoomIn"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="duration">
+                                        <real key="value" value="0.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Fxl-mY-hnc"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PIO-gn-9us">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <connections>
+                                    <action selector="ButtonPressed:" destination="eME-qG-VT3" eventType="touchUpInside" id="7Zo-e5-5dz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="LIN-L3-qIp" firstAttribute="centerY" secondItem="TT8-Hc-Fc2" secondAttribute="centerY" id="4vW-JH-ARg"/>
+                            <constraint firstItem="PIO-gn-9us" firstAttribute="centerY" secondItem="LIN-L3-qIp" secondAttribute="centerY" id="GKh-Nd-eMx"/>
+                            <constraint firstItem="LIN-L3-qIp" firstAttribute="centerX" secondItem="TT8-Hc-Fc2" secondAttribute="centerX" id="YOo-b9-LgH"/>
+                            <constraint firstItem="PIO-gn-9us" firstAttribute="leading" secondItem="TT8-Hc-Fc2" secondAttribute="leading" id="aVl-HS-DBh"/>
+                            <constraint firstItem="PIO-gn-9us" firstAttribute="centerX" secondItem="LIN-L3-qIp" secondAttribute="centerX" id="gv5-hR-GQn"/>
+                            <constraint firstItem="PIO-gn-9us" firstAttribute="bottom" secondItem="Dfm-90-DaS" secondAttribute="top" id="wBm-tQ-RMa"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="autostart" value="NO"/>
+                            <userDefinedRuntimeAttribute type="string" keyPath="animation" value="zoomIn"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="pieChartView" destination="ABi-KP-cs1" id="cNw-dC-0ru"/>
+                        <outlet property="springBackGroundView" destination="LIN-L3-qIp" id="QJI-5K-ifP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U4T-kt-SXO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-446.5" y="159.5"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="jBa-tg-3Kg">

@@ -252,6 +252,9 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
         print("Select Answer: \(answerIndex)")
         do{
             try managedContext.save()
+            if countAnswerdQuestions() == DataStruct.json.count{
+                DataStruct.questionViewController.SubmitButton.enabled = true
+            }
         }catch{
             print("Error")
         }
@@ -276,6 +279,23 @@ class QuestionContentViewController: UIViewController,UIPageViewControllerDataSo
                 
             }
         return nil
+    }
+    
+    
+    /**
+     check if the current question is answered from the database
+     */
+    func countAnswerdQuestions() -> Int {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        let fetchRequest = NSFetchRequest(entityName: "QandA")
+        do{
+            let result = try managedContext.executeFetchRequest(fetchRequest) as! [NSManagedObject]
+            return result.count
+            
+        }catch{
+            return 0
+        }
     }
 
     func viewControllerAtIndex(index : Int ) -> AnswerContentViewController {

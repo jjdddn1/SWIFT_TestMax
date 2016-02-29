@@ -14,4 +14,6 @@ struct DataStruct {
     
     static var json : JSON!
     static var currentQuestionNumber : Int = 0
+    static var shortcutDirection = 0
+    static var loaded = false
 }
