@@ -10,7 +10,7 @@ If you happend to try out this app and found bugs or had any advise, **PLEASE** 
 ## Screenshot
 > The pics maybe outdated cuz I kept updating the app (but too lazy to update the pics 😄)
 
-![image](https://github.com/jjdddn1/SWIFT_TestMax/blob/master/Screenshot/0.png?raw=false)
+![image](https://github.com/jjdddn1/SWIFT_TestMax/blob/master/screenshot/0.png?raw=false)
 ![image](https://github.com/jjdddn1/SWIFT_TestMax/blob/master/Screenshot/1.png?raw=false)
 
 
