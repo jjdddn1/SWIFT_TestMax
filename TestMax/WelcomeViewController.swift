@@ -49,7 +49,14 @@ class WelcomeViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        
+        getJSONFromServer()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent;
+    }
+
+    func getJSONFromServer(){
         // request for the questions' JSON file
         let url = NSURL(string: "http://cs-server.usc.edu:32962/Questions.json")!
         Alamofire.request(.GET, url).validate().responseJSON { response in
@@ -58,7 +65,7 @@ class WelcomeViewController: UIViewController {
                 DataStruct.json = JSON(response.result.value!)
                 self.loadingImage.hidden = true
                 self.checkSavedData()
-
+                
                 // Handle the short cut item
                 switch DataStruct.shortcutDirection{
                     
@@ -77,16 +84,19 @@ class WelcomeViewController: UIViewController {
                 break
             case .Failure(_):
                 NSLog("Failure")
+                let alertController = UIAlertController(title: "Network wrong", message: "Try it out later", preferredStyle: .Alert)
+                let confirm = UIAlertAction(title: "Confrim", style: .Default) { (_) -> Void in
+                    self.getJSONFromServer()
+                }
+                alertController.addAction(confirm)
+                
+                self.presentViewController(alertController, animated: true, completion: nil)
                 break
             }
         }
-
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent;
-    }
-
+    
     // clean up the answered questions and start a new round
     func cleanUpSavedData(){
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
