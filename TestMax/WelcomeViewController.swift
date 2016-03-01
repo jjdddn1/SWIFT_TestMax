@@ -84,7 +84,7 @@ class WelcomeViewController: UIViewController {
                 break
             case .Failure(_):
                 NSLog("Failure")
-                let alertController = UIAlertController(title: "Network wrong", message: "Try it out later", preferredStyle: .Alert)
+                let alertController = UIAlertController(title: "Network not responding", message: "Please check your network and retry", preferredStyle: .Alert)
                 let confirm = UIAlertAction(title: "Confrim", style: .Default) { (_) -> Void in
                     self.getJSONFromServer()
                 }
