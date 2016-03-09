@@ -75,9 +75,9 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func cellAnimationBegin(indexPath: NSIndexPath){
         let cell  = tableView.cellForRowAtIndexPath(indexPath)
         let originState = cell!.transform
-        UIView.animateWithDuration(0.3, animations:{ () -> Void in
+        UIView.animateWithDuration(10, animations:{ () -> Void in
             
-            cell!.transform = CGAffineTransformScale(cell!.transform, 2, 2)
+            cell!.transform = CGAffineTransformScale(cell!.transform, 1, 2)
             cell!.alpha = 0
             }) { (Bool) -> Void in
                 cell!.transform = CGAffineTransformScale(originState, 1, 1)
@@ -162,11 +162,19 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         currentSelectedCell = Dictionary[indexPath.row].0
-        cellAnimationBegin(indexPath)
-
-        self.performSegueWithIdentifier("showQuestionSegue", sender: self)
+//        cellAnimationBegin(indexPath)
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.beginUpdates()
+        tableView.endUpdates()
+//        self.performSegueWithIdentifier("showQuestionSegue", sender: self)
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if tableView.indexPathForSelectedRow == indexPath{
+            return 1000
+        }
+        return 60
+    }
     
     /*
     // MARK: - Navigation
@@ -177,6 +185,7 @@ class ReviewViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Pass the selected object to the new view controller.
     }
     */
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         

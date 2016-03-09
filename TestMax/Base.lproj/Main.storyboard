@@ -46,7 +46,7 @@
                                 <rect key="frame" x="-4" y="65" width="383" height="602"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="sectionIndexBackgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="83" id="rBY-1u-c7d" customClass="ReviewTableViewCell" customModule="TestMax" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="383" height="83"/>
@@ -93,7 +93,7 @@
                                                 <constraint firstItem="LKZ-G3-H27" firstAttribute="bottom" secondItem="S8A-5y-3Ju" secondAttribute="bottom" id="mA6-c8-QwV"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="CorrectLabel" destination="LKZ-G3-H27" id="jRs-TN-GlD"/>
@@ -587,7 +587,7 @@ Should the appellate court uphold the convictions?</string>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ABi-KP-cs1" customClass="PieChartView" customModule="Charts">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="300" id="G2P-VK-1ay"/>
                                             <constraint firstAttribute="width" constant="300" id="zj4-IQ-a6J"/>
