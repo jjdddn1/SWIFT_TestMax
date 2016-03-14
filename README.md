@@ -13,7 +13,7 @@ If you happend to try out this app and found bugs or had any advise, **PLEASE** 
 ![image](https://github.com/jjdddn1/SWIFT_TestMax/blob/master/screenshot/0.png?raw=false)
 ![image](https://github.com/jjdddn1/SWIFT_TestMax/blob/master/screenshot/1.png?raw=false)
 
-
+You can find the gif [here](http://huiyuanr.portfoliobox.net/testmax)
 ## Features
 
 * Practicing law questions on your iphone
