@@ -26,7 +26,7 @@ You can find the gif [here](http://huiyuanr.portfoliobox.net/testmax)
 ```
 $ git clone https://github.com/jjdddn1/SWIFT_TestMax.git
 $ cd SWIFT_TestMax
-$ open TestMax.xcodeproj
+$ open TestMax.xcworkspace
 ```
 
 
